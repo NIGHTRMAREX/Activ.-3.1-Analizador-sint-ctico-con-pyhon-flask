@@ -24,7 +24,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .bordered-group {
-            border: 2px solid #022750;
+            border: 2px solid #b60b0bb5;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -44,7 +44,7 @@
             color: #000;
         }
         textarea::placeholder {
-            color: #999;
+            color: #ca0e0ecd;
         }
         .text-area-small {
             width: 100%;
@@ -56,13 +56,13 @@
             font-size: 16px;
             border: none;
             border-radius: 5px;
-            background-color: #b80707cf;
+            background-color: #cf0808cb;
             color: #fff;
             cursor: pointer;
             margin-top: 10px;
         }
         .button:hover {
-            background-color: #b80707cf;
+            background-color: #000000fe;
         }
         .results-container {
             width: 100%;
@@ -83,7 +83,7 @@
             padding: 8px;
         }
         th {
-            background-color: #b80707cf;
+            background-color: #d60c0cc7;
             color: #fff;
             text-align: center;
         }
@@ -98,11 +98,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Mi primer Analizador Sintáctico Web</h1>
+        <h1>MI PRIMER ANALIZADOR SINTÁCTICO WEB</h1>
         <form method="post">
             <div class="bordered-group">
                 <textarea name="text" rows="10" cols="50" class="text-area-small" placeholder="Inserta tu código aquí">{{ text if text else '' }}</textarea>
-                <input type="submit" value="Analizar" class="button">
+                <div style="display: flex; gap: 10px;">
+                    <input type="submit" value="Analizar" class="button">
+                    <button type="button" class="button" onclick="clearTextArea()">Borrar</button>
+                </div>
             </div>
         </form>
 
@@ -113,14 +116,14 @@
                 <table>
                     <tr>
                         <th>Línea</th>
-                        <th>Token</th>
                         <th>Tipo</th>
+                        <th>Descripción</th>
                     </tr>
                     {% for token in tokens %}
                         <tr>
-                            <td>{{ loop.index }}</td>
+                            <td>{{ token.line }}</td>
                             <td>{{ token.value }}</td>
-                            <td>{% if token.value.lower() == 'for' %}Reservada{% else %}Identificador{% endif %}</td>
+                            <td>{{ token.description }}</td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -128,24 +131,22 @@
                 <h3>Analizador Sintáctico</h3>
                 <table>
                     <tr>
-                        <th>Línea</th>
-                        <th>Valor</th>
-                        <th>Palabra Aceptada</th>
-                        <th>Palabra No Aceptada</th>
+                        <th>Resuldatos de Analisis</th>  <!-- Nueva columna para mostrar errores -->
                     </tr>
-                    {% for token in tokens %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ token.value }}</td>
-                            <td>{% if token.value.lower() == 'for' %}X{% else %} {% endif %}</td>
-                            <td>{% if token.value.lower() != 'for' %}X{% else %} {% endif %}</td>
-                        </tr>
-                    {% endfor %}
+                    <tr>
+                        <td>
+                            {% if error_message %}
+                                {{ error_message }}  <!-- Mostrar mensaje de error si existe -->
+                            {% else %}
+                                No hay errores. <!-- Mensaje en caso de no haber errores -->
+                            {% endif %}
+                        </td>
+                    </tr>
                 </table>
             {% else %}
-                <div class="no-tokens">No se han encontrado tokens</div>
+                <div class="no-tokens">No se encontraron tokens</div>
             {% endif %}
         </div>
-    </div>  
+    </div>
 </body>
 </html>

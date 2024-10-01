@@ -2,20 +2,140 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Grammar
 
-Rule 0     S' -> for_loop
-Rule 1     for_loop -> FOR WORD WORD WORD
-Rule 2     expression -> WORD
-Rule 3     expression -> NUMBER
+Rule 0     S' -> program
+Rule 1     program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE
+Rule 2     declarations -> declaration SEMICOLON
+Rule 3     declarations -> declaration SEMICOLON declarations
+Rule 4     declaration -> INT ID
 
 Terminals, with rules where they appear
 
-FOR                  : 1
-WORD                 : 1 1 1 2
+ID                   : 4
+INT                  : 1 4
+LBRACE               : 1
+LPAREN               : 1
+MAIN                 : 1
+RBRACE               : 1
+RPAREN               : 1
+SEMICOLON            : 2 3
 error                : 
 
 Nonterminals, with rules where they appear
 
-NUMBER               : 3
-expression           : 
-for_loop             : 0
+declaration          : 2 3
+declarations         : 1 3
+program              : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . INT MAIN LPAREN RPAREN LBRACE declarations RBRACE
+
+    INT             shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> INT . MAIN LPAREN RPAREN LBRACE declarations RBRACE
+
+    MAIN            shift and go to state 3
+
+
+state 3
+
+    (1) program -> INT MAIN . LPAREN RPAREN LBRACE declarations RBRACE
+
+    LPAREN          shift and go to state 4
+
+
+state 4
+
+    (1) program -> INT MAIN LPAREN . RPAREN LBRACE declarations RBRACE
+
+    RPAREN          shift and go to state 5
+
+
+state 5
+
+    (1) program -> INT MAIN LPAREN RPAREN . LBRACE declarations RBRACE
+
+    LBRACE          shift and go to state 6
+
+
+state 6
+
+    (1) program -> INT MAIN LPAREN RPAREN LBRACE . declarations RBRACE
+    (2) declarations -> . declaration SEMICOLON
+    (3) declarations -> . declaration SEMICOLON declarations
+    (4) declaration -> . INT ID
+
+    INT             shift and go to state 7
+
+    declarations                   shift and go to state 8
+    declaration                    shift and go to state 9
+
+state 7
+
+    (4) declaration -> INT . ID
+
+    ID              shift and go to state 10
+
+
+state 8
+
+    (1) program -> INT MAIN LPAREN RPAREN LBRACE declarations . RBRACE
+
+    RBRACE          shift and go to state 11
+
+
+state 9
+
+    (2) declarations -> declaration . SEMICOLON
+    (3) declarations -> declaration . SEMICOLON declarations
+
+    SEMICOLON       shift and go to state 12
+
+
+state 10
+
+    (4) declaration -> INT ID .
+
+    SEMICOLON       reduce using rule 4 (declaration -> INT ID .)
+
+
+state 11
+
+    (1) program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE .
+
+    $end            reduce using rule 1 (program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE .)
+
+
+state 12
+
+    (2) declarations -> declaration SEMICOLON .
+    (3) declarations -> declaration SEMICOLON . declarations
+    (2) declarations -> . declaration SEMICOLON
+    (3) declarations -> . declaration SEMICOLON declarations
+    (4) declaration -> . INT ID
+
+    RBRACE          reduce using rule 2 (declarations -> declaration SEMICOLON .)
+    INT             shift and go to state 7
+
+    declaration                    shift and go to state 9
+    declarations                   shift and go to state 13
+
+state 13
+
+    (3) declarations -> declaration SEMICOLON declarations .
+
+    RBRACE          reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
 

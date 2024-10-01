@@ -2,49 +2,83 @@ import ply.lex as lex
 
 # Lista de tokens
 tokens = (
-    'FOR',
-    'WORD',  # Token para otras palabras
-    'NUMBER',  # Para capturar números
+    'INT',
+    'MAIN',
+    'ID',  # Identificadores como x
+    'LPAREN',  # Paréntesis izquierdo
+    'RPAREN',  # Paréntesis derecho
+    'LBRACE',  # Llave izquierda
+    'RBRACE',  # Llave derecha
+    'SEMICOLON'  # Punto y coma
 )
 
-# Reglas de expresiones regulares para los tokens
-def t_FOR(t):
-    r'\b[Ff][Oo][Rr]\b'  # Detecta la palabra 'for' en cualquier combinación de mayúsculas y minúsculas
+# Reglas para los tokens
+def t_INT(t):
+    r'\bint\b'
+    t.type = 'INT'
+    t.description = 'Palabra Reservada'
     return t
 
-# Token genérico para capturar palabras
-def t_WORD(t):
-    r'[a-zA-Z]+'  # Captura cualquier secuencia de letras
+def t_MAIN(t):
+    r'\bmain\b'
+    t.type = 'MAIN'
+    t.description = 'Reservada main'
     return t
 
-# Token para capturar números
-def t_NUMBER(t):
-    r'\d+'  # Captura secuencias de dígitos
-    t.value = int(t.value)  # Convertir a número entero
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = 'ID'
+    t.description = 'Identificador'
+    return t
+
+def t_LPAREN(t):
+    r'\('
+    t.type = 'LPAREN'
+    t.description = 'Paréntesis de apertura'
+    return t
+
+def t_RPAREN(t):
+    r'\)'
+    t.type = 'RPAREN'
+    t.description = 'Paréntesis de cierre'
+    return t
+
+def t_LBRACE(t):
+    r'\{'
+    t.type = 'LBRACE'
+    t.description = 'Llave de apertura'
+    return t
+
+def t_RBRACE(t):
+    r'\}'
+    t.type = 'RBRACE'
+    t.description = 'Llave de cierre'
+    return t
+
+def t_SEMICOLON(t):
+    r';'
+    t.type = 'SEMICOLON'
+    t.description = 'Punto y coma'
     return t
 
 # Ignorar espacios y tabs
 t_ignore = ' \t'
 
-# Manejar errores
+# Manejo de errores
 def t_error(t):
-    if t:
-        print(f"Caracter ilegal: {t.value[0]}")
-        t.lexer.skip(1)  # Saltar el carácter ilegal
-    else:
-        print("Error: Token no válido o inesperado.")
-        
+    print(f"Caracter ilegal: {t.value[0]}")
+    t.lexer.skip(1)
+
 # Construir el analizador léxico
 lexer = lex.lex()
 
 # Función para tokenizar el texto
-def lexico(text):
+def tokenize(text):
     lexer.input(text)
     tokens = []
     while True:
         tok = lexer.token()
-        if tok:  # Solo añadir si el token no es None
-            tokens.append(tok)
-        else:
+        if not tok:
             break
+        tokens.append(tok)
     return tokens

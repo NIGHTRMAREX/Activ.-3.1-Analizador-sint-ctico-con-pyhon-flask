@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'FOR NUMBER WORDfor_loop : FOR WORD WORD WORDexpression : WORDexpression : NUMBER'
+_lr_signature = 'ID INT LBRACE LPAREN MAIN RBRACE RPAREN SEMICOLONprogram : INT MAIN LPAREN RPAREN LBRACE declarations RBRACEdeclarations : declaration SEMICOLON\n                    | declaration SEMICOLON declarationsdeclaration : INT ID'
     
-_lr_action_items = {'FOR':([0,],[2,]),'$end':([1,5,],[0,-1,]),'WORD':([2,3,4,],[3,4,5,]),}
+_lr_action_items = {'INT':([0,6,12,],[2,7,7,]),'$end':([1,11,],[0,-1,]),'MAIN':([2,],[3,]),'LPAREN':([3,],[4,]),'RPAREN':([4,],[5,]),'LBRACE':([5,],[6,]),'ID':([7,],[10,]),'RBRACE':([8,12,13,],[11,-2,-3,]),'SEMICOLON':([9,10,],[12,-4,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'for_loop':([0,],[1,]),}
+_lr_goto_items = {'program':([0,],[1,]),'declarations':([6,12,],[8,13,]),'declaration':([6,12,],[9,9,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,8 +26,9 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> for_loop","S'",1,None,None,None),
-  ('for_loop -> FOR WORD WORD WORD','for_loop',4,'p_for_loop','parser.py',6),
-  ('expression -> WORD','expression',1,'p_expression_word','parser.py',10),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',14),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE','program',7,'p_program','parser.py',9),
+  ('declarations -> declaration SEMICOLON','declarations',2,'p_declarations','parser.py',13),
+  ('declarations -> declaration SEMICOLON declarations','declarations',3,'p_declarations','parser.py',14),
+  ('declaration -> INT ID','declaration',2,'p_declaration','parser.py',21),
 ]
