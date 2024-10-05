@@ -1,39 +1,68 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    MAIN
+
 Grammar
 
 Rule 0     S' -> program
-Rule 1     program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE
+Rule 1     program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON
 Rule 2     declarations -> declaration SEMICOLON
 Rule 3     declarations -> declaration SEMICOLON declarations
-Rule 4     declaration -> INT ID
+Rule 4     declaration -> INT var_list
+Rule 5     var_list -> ID
+Rule 6     var_list -> ID COMMA var_list
+Rule 7     instructions -> instruction SEMICOLON
+Rule 8     instructions -> instruction SEMICOLON instructions
+Rule 9     instructions -> END SEMICOLON
+Rule 10    instruction -> READ ID
+Rule 11    instruction -> PRINT LPAREN STRING RPAREN
+Rule 12    instruction -> assignment
+Rule 13    assignment -> ID ASSIGN expression
+Rule 14    expression -> ID PLUS ID
+Rule 15    expression -> NUMBER
 
 Terminals, with rules where they appear
 
-ID                   : 4
-INT                  : 1 4
+ASSIGN               : 13
+COMMA                : 6
+END                  : 1 9
+ID                   : 1 5 6 10 13 14 14
+INT                  : 4
 LBRACE               : 1
-LPAREN               : 1
-MAIN                 : 1
+LPAREN               : 1 11
+MAIN                 : 
+NUMBER               : 15
+PLUS                 : 14
+PRINT                : 11
+PROGRAMA             : 1
 RBRACE               : 1
-RPAREN               : 1
-SEMICOLON            : 2 3
+READ                 : 10
+RPAREN               : 1 11
+SEMICOLON            : 1 2 3 7 8 9
+STRING               : 11
 error                : 
 
 Nonterminals, with rules where they appear
 
+assignment           : 12
 declaration          : 2 3
 declarations         : 1 3
+expression           : 13
+instruction          : 7 8
+instructions         : 1 8
 program              : 0
+var_list             : 4 6
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . program
-    (1) program -> . INT MAIN LPAREN RPAREN LBRACE declarations RBRACE
+    (1) program -> . PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON
 
-    INT             shift and go to state 2
+    PROGRAMA        shift and go to state 2
 
     program                        shift and go to state 1
 
@@ -45,97 +74,319 @@ state 1
 
 state 2
 
-    (1) program -> INT . MAIN LPAREN RPAREN LBRACE declarations RBRACE
+    (1) program -> PROGRAMA . ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON
 
-    MAIN            shift and go to state 3
+    ID              shift and go to state 3
 
 
 state 3
 
-    (1) program -> INT MAIN . LPAREN RPAREN LBRACE declarations RBRACE
+    (1) program -> PROGRAMA ID . LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON
 
     LPAREN          shift and go to state 4
 
 
 state 4
 
-    (1) program -> INT MAIN LPAREN . RPAREN LBRACE declarations RBRACE
+    (1) program -> PROGRAMA ID LPAREN . RPAREN LBRACE declarations instructions RBRACE END SEMICOLON
 
     RPAREN          shift and go to state 5
 
 
 state 5
 
-    (1) program -> INT MAIN LPAREN RPAREN . LBRACE declarations RBRACE
+    (1) program -> PROGRAMA ID LPAREN RPAREN . LBRACE declarations instructions RBRACE END SEMICOLON
 
     LBRACE          shift and go to state 6
 
 
 state 6
 
-    (1) program -> INT MAIN LPAREN RPAREN LBRACE . declarations RBRACE
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE . declarations instructions RBRACE END SEMICOLON
     (2) declarations -> . declaration SEMICOLON
     (3) declarations -> . declaration SEMICOLON declarations
-    (4) declaration -> . INT ID
+    (4) declaration -> . INT var_list
 
-    INT             shift and go to state 7
+    INT             shift and go to state 9
 
-    declarations                   shift and go to state 8
-    declaration                    shift and go to state 9
+    declarations                   shift and go to state 7
+    declaration                    shift and go to state 8
 
 state 7
 
-    (4) declaration -> INT . ID
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations . instructions RBRACE END SEMICOLON
+    (7) instructions -> . instruction SEMICOLON
+    (8) instructions -> . instruction SEMICOLON instructions
+    (9) instructions -> . END SEMICOLON
+    (10) instruction -> . READ ID
+    (11) instruction -> . PRINT LPAREN STRING RPAREN
+    (12) instruction -> . assignment
+    (13) assignment -> . ID ASSIGN expression
 
+    END             shift and go to state 12
+    READ            shift and go to state 14
+    PRINT           shift and go to state 15
     ID              shift and go to state 10
 
+    instructions                   shift and go to state 11
+    instruction                    shift and go to state 13
+    assignment                     shift and go to state 16
 
 state 8
-
-    (1) program -> INT MAIN LPAREN RPAREN LBRACE declarations . RBRACE
-
-    RBRACE          shift and go to state 11
-
-
-state 9
 
     (2) declarations -> declaration . SEMICOLON
     (3) declarations -> declaration . SEMICOLON declarations
 
-    SEMICOLON       shift and go to state 12
+    SEMICOLON       shift and go to state 17
 
+
+state 9
+
+    (4) declaration -> INT . var_list
+    (5) var_list -> . ID
+    (6) var_list -> . ID COMMA var_list
+
+    ID              shift and go to state 19
+
+    var_list                       shift and go to state 18
 
 state 10
 
-    (4) declaration -> INT ID .
+    (13) assignment -> ID . ASSIGN expression
 
-    SEMICOLON       reduce using rule 4 (declaration -> INT ID .)
+    ASSIGN          shift and go to state 20
 
 
 state 11
 
-    (1) program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE .
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions . RBRACE END SEMICOLON
 
-    $end            reduce using rule 1 (program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE .)
+    RBRACE          shift and go to state 21
 
 
 state 12
+
+    (9) instructions -> END . SEMICOLON
+
+    SEMICOLON       shift and go to state 22
+
+
+state 13
+
+    (7) instructions -> instruction . SEMICOLON
+    (8) instructions -> instruction . SEMICOLON instructions
+
+    SEMICOLON       shift and go to state 23
+
+
+state 14
+
+    (10) instruction -> READ . ID
+
+    ID              shift and go to state 24
+
+
+state 15
+
+    (11) instruction -> PRINT . LPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 25
+
+
+state 16
+
+    (12) instruction -> assignment .
+
+    SEMICOLON       reduce using rule 12 (instruction -> assignment .)
+
+
+state 17
 
     (2) declarations -> declaration SEMICOLON .
     (3) declarations -> declaration SEMICOLON . declarations
     (2) declarations -> . declaration SEMICOLON
     (3) declarations -> . declaration SEMICOLON declarations
-    (4) declaration -> . INT ID
+    (4) declaration -> . INT var_list
 
-    RBRACE          reduce using rule 2 (declarations -> declaration SEMICOLON .)
-    INT             shift and go to state 7
+    END             reduce using rule 2 (declarations -> declaration SEMICOLON .)
+    READ            reduce using rule 2 (declarations -> declaration SEMICOLON .)
+    PRINT           reduce using rule 2 (declarations -> declaration SEMICOLON .)
+    ID              reduce using rule 2 (declarations -> declaration SEMICOLON .)
+    INT             shift and go to state 9
 
-    declaration                    shift and go to state 9
-    declarations                   shift and go to state 13
+    declaration                    shift and go to state 8
+    declarations                   shift and go to state 26
 
-state 13
+state 18
+
+    (4) declaration -> INT var_list .
+
+    SEMICOLON       reduce using rule 4 (declaration -> INT var_list .)
+
+
+state 19
+
+    (5) var_list -> ID .
+    (6) var_list -> ID . COMMA var_list
+
+    SEMICOLON       reduce using rule 5 (var_list -> ID .)
+    COMMA           shift and go to state 27
+
+
+state 20
+
+    (13) assignment -> ID ASSIGN . expression
+    (14) expression -> . ID PLUS ID
+    (15) expression -> . NUMBER
+
+    ID              shift and go to state 28
+    NUMBER          shift and go to state 30
+
+    expression                     shift and go to state 29
+
+state 21
+
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE . END SEMICOLON
+
+    END             shift and go to state 31
+
+
+state 22
+
+    (9) instructions -> END SEMICOLON .
+
+    RBRACE          reduce using rule 9 (instructions -> END SEMICOLON .)
+
+
+state 23
+
+    (7) instructions -> instruction SEMICOLON .
+    (8) instructions -> instruction SEMICOLON . instructions
+    (7) instructions -> . instruction SEMICOLON
+    (8) instructions -> . instruction SEMICOLON instructions
+    (9) instructions -> . END SEMICOLON
+    (10) instruction -> . READ ID
+    (11) instruction -> . PRINT LPAREN STRING RPAREN
+    (12) instruction -> . assignment
+    (13) assignment -> . ID ASSIGN expression
+
+    RBRACE          reduce using rule 7 (instructions -> instruction SEMICOLON .)
+    END             shift and go to state 12
+    READ            shift and go to state 14
+    PRINT           shift and go to state 15
+    ID              shift and go to state 10
+
+    instruction                    shift and go to state 13
+    instructions                   shift and go to state 32
+    assignment                     shift and go to state 16
+
+state 24
+
+    (10) instruction -> READ ID .
+
+    SEMICOLON       reduce using rule 10 (instruction -> READ ID .)
+
+
+state 25
+
+    (11) instruction -> PRINT LPAREN . STRING RPAREN
+
+    STRING          shift and go to state 33
+
+
+state 26
 
     (3) declarations -> declaration SEMICOLON declarations .
 
-    RBRACE          reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
+    END             reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
+    READ            reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
+    PRINT           reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
+    ID              reduce using rule 3 (declarations -> declaration SEMICOLON declarations .)
+
+
+state 27
+
+    (6) var_list -> ID COMMA . var_list
+    (5) var_list -> . ID
+    (6) var_list -> . ID COMMA var_list
+
+    ID              shift and go to state 19
+
+    var_list                       shift and go to state 34
+
+state 28
+
+    (14) expression -> ID . PLUS ID
+
+    PLUS            shift and go to state 35
+
+
+state 29
+
+    (13) assignment -> ID ASSIGN expression .
+
+    SEMICOLON       reduce using rule 13 (assignment -> ID ASSIGN expression .)
+
+
+state 30
+
+    (15) expression -> NUMBER .
+
+    SEMICOLON       reduce using rule 15 (expression -> NUMBER .)
+
+
+state 31
+
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END . SEMICOLON
+
+    SEMICOLON       shift and go to state 36
+
+
+state 32
+
+    (8) instructions -> instruction SEMICOLON instructions .
+
+    RBRACE          reduce using rule 8 (instructions -> instruction SEMICOLON instructions .)
+
+
+state 33
+
+    (11) instruction -> PRINT LPAREN STRING . RPAREN
+
+    RPAREN          shift and go to state 37
+
+
+state 34
+
+    (6) var_list -> ID COMMA var_list .
+
+    SEMICOLON       reduce using rule 6 (var_list -> ID COMMA var_list .)
+
+
+state 35
+
+    (14) expression -> ID PLUS . ID
+
+    ID              shift and go to state 38
+
+
+state 36
+
+    (1) program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON .
+
+    $end            reduce using rule 1 (program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON .)
+
+
+state 37
+
+    (11) instruction -> PRINT LPAREN STRING RPAREN .
+
+    SEMICOLON       reduce using rule 11 (instruction -> PRINT LPAREN STRING RPAREN .)
+
+
+state 38
+
+    (14) expression -> ID PLUS ID .
+
+    SEMICOLON       reduce using rule 14 (expression -> ID PLUS ID .)
 

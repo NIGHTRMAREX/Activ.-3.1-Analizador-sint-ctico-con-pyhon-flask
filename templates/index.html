@@ -116,13 +116,23 @@
                 <table>
                     <tr>
                         <th>Línea</th>
-                        <th>Tipo</th>
+                        <th>Token</th>
+                        <th>Palabra reservada</th>
+                        <th>Identificador</th>
+                        <th>Cadena</th>
+                        <th>Número</th>
+                        <th>Símbolo</th>
                         <th>Descripción</th>
                     </tr>
                     {% for token in tokens %}
                         <tr>
                             <td>{{ token.line }}</td>
                             <td>{{ token.value }}</td>
+                            <td>{% if token.is_reserved %}X{% endif %}</td>
+                            <td>{% if token.is_identifier %}X{% endif %}</td>
+                            <td>{% if token.is_string %}X{% endif %}</td>
+                            <td>{% if token.is_number %}X{% endif %}</td>
+                            <td>{% if token.is_symbol %}X{% endif %}</td>
                             <td>{{ token.description }}</td>
                         </tr>
                     {% endfor %}
@@ -131,14 +141,14 @@
                 <h3>Analizador Sintáctico</h3>
                 <table>
                     <tr>
-                        <th>Resuldatos de Analisis</th>  <!-- Nueva columna para mostrar errores -->
+                        <th>Resultados de Análisis</th>
                     </tr>
                     <tr>
                         <td>
                             {% if error_message %}
-                                {{ error_message }}  <!-- Mostrar mensaje de error si existe -->
+                                {{ error_message }}  
                             {% else %}
-                                No hay errores. <!-- Mensaje en caso de no haber errores -->
+                                No hay errores. 
                             {% endif %}
                         </td>
                     </tr>

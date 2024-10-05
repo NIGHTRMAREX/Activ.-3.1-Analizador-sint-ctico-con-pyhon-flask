@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ID INT LBRACE LPAREN MAIN RBRACE RPAREN SEMICOLONprogram : INT MAIN LPAREN RPAREN LBRACE declarations RBRACEdeclarations : declaration SEMICOLON\n                    | declaration SEMICOLON declarationsdeclaration : INT ID'
+_lr_signature = 'ASSIGN COMMA END ID INT LBRACE LPAREN MAIN NUMBER PLUS PRINT PROGRAMA RBRACE READ RPAREN SEMICOLON STRINGprogram : PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLONdeclarations : declaration SEMICOLON\n                    | declaration SEMICOLON declarationsdeclaration : INT var_listvar_list : ID\n                | ID COMMA var_listinstructions : instruction SEMICOLON\n                    | instruction SEMICOLON instructions\n                    | END SEMICOLONinstruction : READ ID\n                   | PRINT LPAREN STRING RPAREN\n                   | assignmentassignment : ID ASSIGN expressionexpression : ID PLUS ID\n                  | NUMBER'
     
-_lr_action_items = {'INT':([0,6,12,],[2,7,7,]),'$end':([1,11,],[0,-1,]),'MAIN':([2,],[3,]),'LPAREN':([3,],[4,]),'RPAREN':([4,],[5,]),'LBRACE':([5,],[6,]),'ID':([7,],[10,]),'RBRACE':([8,12,13,],[11,-2,-3,]),'SEMICOLON':([9,10,],[12,-4,]),}
+_lr_action_items = {'PROGRAMA':([0,],[2,]),'$end':([1,36,],[0,-1,]),'ID':([2,7,9,14,17,20,23,26,27,35,],[3,10,19,24,-2,28,10,-3,19,38,]),'LPAREN':([3,15,],[4,25,]),'RPAREN':([4,33,],[5,37,]),'LBRACE':([5,],[6,]),'INT':([6,17,],[9,9,]),'END':([7,17,21,23,26,],[12,-2,31,12,-3,]),'READ':([7,17,23,26,],[14,-2,14,-3,]),'PRINT':([7,17,23,26,],[15,-2,15,-3,]),'SEMICOLON':([8,12,13,16,18,19,24,29,30,31,34,37,38,],[17,22,23,-12,-4,-5,-10,-13,-15,36,-6,-11,-14,]),'ASSIGN':([10,],[20,]),'RBRACE':([11,22,23,32,],[21,-9,-7,-8,]),'COMMA':([19,],[27,]),'NUMBER':([20,],[30,]),'STRING':([25,],[33,]),'PLUS':([28,],[35,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'declarations':([6,12,],[8,13,]),'declaration':([6,12,],[9,9,]),}
+_lr_goto_items = {'program':([0,],[1,]),'declarations':([6,17,],[7,26,]),'declaration':([6,17,],[8,8,]),'instructions':([7,23,],[11,32,]),'instruction':([7,23,],[13,13,]),'assignment':([7,23,],[16,16,]),'var_list':([9,27,],[18,34,]),'expression':([20,],[29,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,8 +27,19 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> INT MAIN LPAREN RPAREN LBRACE declarations RBRACE','program',7,'p_program','parser.py',9),
-  ('declarations -> declaration SEMICOLON','declarations',2,'p_declarations','parser.py',13),
-  ('declarations -> declaration SEMICOLON declarations','declarations',3,'p_declarations','parser.py',14),
-  ('declaration -> INT ID','declaration',2,'p_declaration','parser.py',21),
+  ('program -> PROGRAMA ID LPAREN RPAREN LBRACE declarations instructions RBRACE END SEMICOLON','program',10,'p_program','parser.py',9),
+  ('declarations -> declaration SEMICOLON','declarations',2,'p_declarations','parser.py',14),
+  ('declarations -> declaration SEMICOLON declarations','declarations',3,'p_declarations','parser.py',15),
+  ('declaration -> INT var_list','declaration',2,'p_declaration','parser.py',23),
+  ('var_list -> ID','var_list',1,'p_var_list','parser.py',28),
+  ('var_list -> ID COMMA var_list','var_list',3,'p_var_list','parser.py',29),
+  ('instructions -> instruction SEMICOLON','instructions',2,'p_instructions','parser.py',37),
+  ('instructions -> instruction SEMICOLON instructions','instructions',3,'p_instructions','parser.py',38),
+  ('instructions -> END SEMICOLON','instructions',2,'p_instructions','parser.py',39),
+  ('instruction -> READ ID','instruction',2,'p_instruction','parser.py',46),
+  ('instruction -> PRINT LPAREN STRING RPAREN','instruction',4,'p_instruction','parser.py',47),
+  ('instruction -> assignment','instruction',1,'p_instruction','parser.py',48),
+  ('assignment -> ID ASSIGN expression','assignment',3,'p_assignment','parser.py',57),
+  ('expression -> ID PLUS ID','expression',3,'p_expression','parser.py',61),
+  ('expression -> NUMBER','expression',1,'p_expression','parser.py',62),
 ]
